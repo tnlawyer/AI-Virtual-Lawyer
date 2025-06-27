@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Virtual Lawyer</title>
+  <meta name="description" content="Ask legal questions and get PDF responses by email.">
+  <meta name="keywords" content="AI lawyer, legal PDF, virtual legal assistant">
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    textarea, input { width: 100%; margin: .5em 0; padding: .5em; font-size: 1em; }
+    button { padding: .6em 1em; font-size: 1em; }
+    .message { margin-top: 1em; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>AI Virtual Lawyer</h1>
+  <textarea id="question" rows="4" placeholder="Ask your legal question"></textarea>
+  <input type="email" id="email" placeholder="Your email" />
+  <button onclick="submit()">Submit</button>
+  <div id="message" class="message"></div>
+
+  <script>
+    async function submit() {
+      const msg = document.getElementById('message');
+      msg.textContent = 'Sending...';
+      const res = await fetch('/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: document.getElementById('question').value,
+          email: document.getElementById('email').value
+        })
+      });
+      const data = await res.json();
+      msg.textContent = data.message || data.error;
+    }
+  </script>
+</body>
+</html>
